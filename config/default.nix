@@ -11,6 +11,7 @@
     ./lsp/ionide.nix
     ./lsp/none-ls.nix
     ./lsp/trouble.nix
+    ./noice.nix
     ./nvim-tree.nix
     ./options.nix
     ./treesitter.nix
