@@ -25,8 +25,8 @@
     ./utils/wilder.nix
   ];
 
-  colorschemes.dracula.enable = true;
   plugins.web-devicons.enable = true;
+  colorschemes.tokyonight.enable = true;
 
   diagnostics = { virtual_lines.only_current_line = true; };
 
