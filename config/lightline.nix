@@ -1,6 +1,6 @@
 {
   plugins.lightline = {
-    enable = true;
+    enable = false;
     settings = {
       colorscheme = "material";
     };
