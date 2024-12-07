@@ -109,6 +109,11 @@
 
     # Tabs
     {
+      key = "<C-a>";
+      action = "<CMD>BufferLinePick<CR>";
+      options.desc = "Pick BufferLine";
+    }
+    {
       mode = "n";
       key = "<leader>t";
       action = "+tab";
