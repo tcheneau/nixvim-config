@@ -6,16 +6,6 @@
       close_icon = "";
       left_trunc_marker = " ";
       right_trunc_marker = " ";
-      get_element_icon = ''
-        function(element)
-          -- element consists of {filetype: string, path: string, extension: string, directory: string}
-          -- This can be used to change how bufferline fetches the icon
-          -- for an element e.g. a buffer or a tab.
-          -- e.g.
-          local icon, hl = require('nvim-web-devicons').get_icon_by_filetype(opts.filetype, { default = false })
-          return icon, hl
-        end
-      '';
       diagnostics = "nvim_lsp";
       diagnostics_indicator = ''
         function(count, level, diagnostics_dict, context)
