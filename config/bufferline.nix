@@ -1,7 +1,6 @@
 { plugins.bufferline = { 
     enable = true;
-    settings = {
-      options = {
+    settings.options = {
       always_show_bufferline = true;
       buffer_close_icon = "󰅙";
       close_icon = "";
@@ -17,6 +16,7 @@
           return icon, hl
         end
       '';
+      diagnostics = "nvim_lsp";
       diagnostics_indicator = ''
         function(count, level, diagnostics_dict, context)
           local s = ""
@@ -40,6 +40,5 @@
         ""
       ];
       };
-    };
   };
 }
