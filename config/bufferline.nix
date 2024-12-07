@@ -31,6 +31,7 @@
         end
       '';
       right_mouse_command = "bdelete! %d"; # -- can be a string | function | false, see "Mouse actions"
+      hover.enabled = true;
       indicator = {
         icon = "▎";
         style = "icon";
