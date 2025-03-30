@@ -11,7 +11,7 @@
     settings.options = {
       theme = "dracula";
       section_separators = { left = ""; right = ""; };
-      component_separators = { left = ""; right = ""; };
+      component_separators = { left = "⎹"; right = "⎸"; };
       # square-opacity
       #flame_thick
       # pixelated_square
