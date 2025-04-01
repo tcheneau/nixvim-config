@@ -10,6 +10,13 @@
         clangd.enable = true;
         nixd.enable = true;
         ruff.enable = true;
+        gopls = {
+          enable = true;
+          settings = {
+            gofumpt = true;
+          };
+        };
+        golangci_lint_ls.enable = true;
       };
       keymaps.lspBuf = {
         "gd" = "definition";
