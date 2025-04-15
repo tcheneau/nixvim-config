@@ -1,7 +1,9 @@
 {
   imports = [
+    ./alpha.nix
     ./bufferline.nix
     ./cmp.nix
+    ./confort-nvim.nix
     ./chatgpt.nix
     ./git.nix
     ./lightline.nix
@@ -12,6 +14,7 @@
     ./lsp/trouble.nix
     ./noice.nix
     ./nvim-tree.nix
+    ./outline.nix
     ./options.nix
     ./treesitter.nix
     ./utils/auto-pairs.nix
@@ -25,6 +28,7 @@
   ];
 
   plugins.web-devicons.enable = true;
+  plugins.notify = true;
   colorschemes.tokyonight.enable = true;
 
   diagnostics = { virtual_lines.only_current_line = true; };
