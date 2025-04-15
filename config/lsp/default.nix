@@ -13,7 +13,11 @@
         gopls = {
           enable = true;
           settings = {
+            completeUnimported = true;
             gofumpt = true;
+            codelenses = {
+               tidy = true;
+            };
           };
         };
         golangci_lint_ls.enable = true;

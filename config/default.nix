@@ -28,7 +28,7 @@
   ];
 
   plugins.web-devicons.enable = true;
-  plugins.notify = true;
+  plugins.notify.enable = true;
   colorschemes.tokyonight.enable = true;
 
   diagnostics = { virtual_lines.only_current_line = true; };
