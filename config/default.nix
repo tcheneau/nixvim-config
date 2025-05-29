@@ -16,6 +16,7 @@
     ./nvim-tree.nix
     ./outline.nix
     ./options.nix
+    ./parrot.nix
     ./treesitter.nix
     ./utils/auto-pairs.nix
     ./utils/autosave.nix
