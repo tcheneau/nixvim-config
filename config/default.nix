@@ -16,7 +16,6 @@
     ./nvim-tree.nix
     ./outline.nix
     ./options.nix
-    ./parrot.nix
     ./treesitter.nix
     ./utils/auto-pairs.nix
     ./utils/autosave.nix
@@ -32,7 +31,7 @@
   plugins.notify.enable = true;
   colorschemes.tokyonight.enable = true;
 
-  diagnostics = { virtual_lines.only_current_line = true; };
+  diagnostics = { virtual_text = true; };
 
   globals.mapleader = " ";
   keymaps = [
