@@ -31,7 +31,7 @@
   plugins.notify.enable = true;
   colorschemes.tokyonight.enable = true;
 
-  diagnostics = { virtual_text = true; };
+  diagnostic.settings = { virtual_text = true;  };
 
   globals.mapleader = " ";
   keymaps = [
