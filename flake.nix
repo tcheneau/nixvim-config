@@ -1,38 +1,54 @@
 {
-  description = "A nixvim configuration";
+  description = "A Nixvim configuration";
 
   inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixvim.url = "github:nix-community/nixvim";
-    flake-utils.url = "github:numtide/flake-utils";
+    flake-parts.url = "github:hercules-ci/flake-parts";
   };
 
-  outputs = { self, nixpkgs, nixvim, flake-utils, ... }@inputs:
-    let config = import ./config; # import the module directly
-    in flake-utils.lib.eachDefaultSystem (system:
-      let
-        nixvimLib = nixvim.lib.${system};
-        pkgs = import nixpkgs { inherit system; };
-        nixvim' = nixvim.legacyPackages.${system};
-        nvim = nixvim'.makeNixvimWithModule {
-          inherit pkgs;
-          module = config;
-        };
-      in
-      {
-        formatter = nixpkgs.legacyPackages.${system}.nixpkgs-fmt;
+  outputs =
+    { self, flake-parts, ... }@inputs:
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = [
+        "x86_64-linux"
+        "aarch64-linux"
+        "x86_64-darwin"
+        "aarch64-darwin"
+      ];
 
-        checks = {
-          default = nixvimLib.check.mkTestDerivationFromNvim {
-            inherit nvim;
-            name = "My nixvim configuration";
+      imports = [
+        # Import nixvim's flake-parts module;
+        # Adds `flake.nixvimModules` and `perSystem.nixvimConfigurations`
+        inputs.nixvim.flakeModules.default
+      ];
+
+      nixvim = {
+        # Automatically install corresponding packages for each nixvimConfiguration
+        # Lets you run `nix run .#<name>`, or simply `nix run` if you have a default
+        packages.enable = true;
+        # Automatically install checks for each nixvimConfiguration
+        # Run `nix flake check` to verify that your config is not broken
+        checks.enable = true;
+      };
+
+      # You can define your reusable Nixvim modules here
+      flake.nixvimModules = {
+        default = ./config;
+      };
+
+      perSystem =
+        { system, ... }:
+        {
+          # You can define actual Nixvim configurations here
+          nixvimConfigurations = {
+            default = inputs.nixvim.lib.evalNixvim {
+              inherit system;
+              modules = [
+                self.nixvimModules.default
+              ];
+            };
           };
         };
-
-        packages = {
-          # Lets you run `nix run .` to start nixvim
-          default = nvim;
-        };
-
-        devShells.default = import ./shell.nix { inherit pkgs; };
-      });
+    };
 }
