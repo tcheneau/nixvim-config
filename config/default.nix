@@ -4,7 +4,6 @@
             ./bufferline.nix
             ./cmp.nix
             ./confort-nvim.nix
-            ./chatgpt.nix
             ./git.nix
             ./lightline.nix
             ./lsp/default.nix
