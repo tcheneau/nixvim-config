@@ -1,12 +1,13 @@
 {pkgs, ...}: let
   outline-nvim = pkgs.vimUtils.buildVimPlugin {
-    name = "outline-nvim";
+    pname = "outline-nvim";
     src = pkgs.fetchFromGitHub {
       owner = "hedyhli";
       repo = "outline.nvim";
-      rev = "d5c29ee3ff3b7d1bdd454b37698316e67808c36e";
+      rev = "c293eb56db880a0539bf9d85b4a27816960b863e";
       hash = "sha256-uWMHUkrGo8D3nUvYrDcXOWbXLWvFv9rWsBxLfR2ckcY=";
     };
+    version = "0.0.1";
     nvimSkipModule = "outline.providers.norg";
   };
 in {
