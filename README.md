@@ -43,24 +43,31 @@ Descriptions of all the config files/plugins used in this configuration.
 
 | Name | Description |
 | --- | --- |
+| alpha.nix | Greeter/dashboard screen on startup. |
 | auto-pairs.nix | Pairs brackets and quotes automatically. |
 | autosave.nix | Saves changes to disk automatically. |
+| blink-cmp.nix | Performant completion engine with LSP, path, snippet, buffer, and emoji sources. |
+| blankline.nix | Indent guides with scope awareness. |
 | bufferline.nix | Tab-like interface for easy buffer navigation. |
-| cmp.nix | Completion source with several options, including copilot. |
-| default.nix | Default configuration file for nixvim. |
-| fidget.nix | Show LSP notifications in the bottom corner. |
-| git.nix | Gitsigns shows git decorations in Lua, including signs for added, removed, and changed lines. |
-| ionide.nix | IDE-like features for F# programming. |
-| lightline.nix | Lightweight status line. |
-| lsp.nix | Language Server Protocol support. |
-| none-ls.nix | Additional language server configurations. |
-| nvim-tree.nix | File explorer tree. |
-| options.nix | Additional options and settings for nixvim. |
+| codecompanion.nix | AI-powered coding assistant using a local Ollama server. |
+| conform-nvim.nix | Lightweight yet powerful formatter with format-on-save. |
+| default.nix | Default configuration file — imports all modules. |
+| fidget.nix | Show LSP progress notifications in the bottom corner. |
+| git.nix | Gitsigns — git decorations: signs for added, removed, and changed lines. |
+| keymaps.nix | Global keymaps and leader key configuration. |
+| lint.nix | Asynchronous linting via nvim-lint (e.g. statix for Nix). |
+| lsp.nix | Language Server Protocol support (bash, C, Go, Nix, Python, Rust). |
+| lualine.nix | Status line written in Lua. |
+| noice.nix | Modern UI for messages, cmdline, and popupmenu. |
+| nvim-tree.nix | File explorer tree sidebar. |
+| oil.nix | Edit the filesystem like a buffer — replaces netrw. |
+| options.nix | Neovim options and settings. |
+| outline.nix | Document outline/symbols viewer. |
 | telescope.nix | Extendable fuzzy finder over lists. |
 | toggleterm.nix | Management of multiple terminal windows. |
 | treesitter.nix | Syntax highlighting and indentation based on Tree-sitter. |
-| trouble.nix | Provides a pretty list for showing diagnostics, references, telescope results, quickfix and location lists | 
-| which_key.nix | Popup display of keybindings. |
+| trouble.nix | Pretty list for diagnostics, references, quickfix, and location lists. |
+| which-key.nix | Popup display of keybindings. |
 
 ## Contributing
 

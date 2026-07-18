@@ -1,6 +1,10 @@
 { pkgs, ... }:
 
 {
+  # golangci-lint-langserver wraps the golangci-lint CLI,
+  # which must be available in PATH at runtime
+  extraPackages = [ pkgs.golangci-lint ];
+
   plugins = {
     lsp = {
       enable = true;
@@ -24,7 +28,7 @@
       };
       keymaps.lspBuf = {
         "gd" = "definition";
-        "gD" = "references";
+        "gr" = "references";
         "gt" = "type_definition";
         "gi" = "implementation";
         "K" = "hover";

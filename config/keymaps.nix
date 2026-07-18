@@ -12,6 +12,12 @@
       options.desc = "Toggle NvimTree";
     }
     {
+      mode = "n";
+      key = "-";
+      action = "<CMD>Oil<CR>";
+      options.desc = "Open parent directory in Oil";
+    }
+    {
       key = "<leader>c";
       action = "+context";
     }
@@ -30,7 +36,7 @@
     {
       # Format file
       key = "<leader>fm";
-      action = "<CMD>lua vim.lsp.buf.format()<CR>";
+      action = "<CMD>lua require('conform').format({ lsp_format = 'fallback' })<CR>";
       options.desc = "Format the current buffer";
     }
 

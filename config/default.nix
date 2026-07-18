@@ -1,21 +1,22 @@
 {
   imports = [
             ./alpha.nix
+            ./blink-cmp.nix
             ./bufferline.nix
-            ./cmp.nix
+            ./codecompanion.nix
             ./conform-nvim.nix
             ./git.nix
             ./keymaps.nix
-            ./lightline.nix
+            ./lint.nix
+            ./lualine.nix
             ./lsp/default.nix
             ./lsp/fidget.nix
-            ./lsp/ionide.nix
-            ./lsp/none-ls.nix
             ./lsp/trouble.nix
             ./noice.nix
             ./nvim-tree.nix
-            ./outline.nix
+            ./oil.nix
             ./options.nix
+            ./outline.nix
             ./treesitter.nix
             ./utils/auto-pairs.nix
             ./utils/autosave.nix
@@ -24,7 +25,6 @@
             ./utils/telescope.nix
             ./utils/toggleterm.nix
             ./utils/which-key.nix
-            ./utils/wilder.nix
   ];
 
   plugins.web-devicons.enable = true;

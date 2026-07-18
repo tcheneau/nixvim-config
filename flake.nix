@@ -45,12 +45,6 @@
             default = inputs.nixvim.lib.evalNixvim {
               inherit system;
               modules = [
-                ({ lib, ... }: {
-                  nixpkgs.config.allowUnfreePredicate = pkg:
-                    builtins.elem (lib.getName pkg) [
-                      "cmp-emoji"
-                    ];
-                })
                 self.nixvimModules.default
               ];
             };
