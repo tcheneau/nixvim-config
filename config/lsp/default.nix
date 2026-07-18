@@ -17,10 +17,12 @@
         gopls = {
           enable = true;
           settings = {
-            completeUnimported = true;
-            gofumpt = true;
-            codelenses = {
-               tidy = true;
+            gopls = {
+              completeUnimported = true;
+              gofumpt = true;
+              codelenses = {
+                 tidy = true;
+              };
             };
           };
         };

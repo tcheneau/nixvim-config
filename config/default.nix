@@ -6,6 +6,7 @@
             ./codecompanion.nix
             ./conform-nvim.nix
             ./git.nix
+            ./image.nix
             ./keymaps.nix
             ./lint.nix
             ./lualine.nix
@@ -13,6 +14,7 @@
             ./lsp/fidget.nix
             ./lsp/trouble.nix
             ./noice.nix
+            ./notes.nix
             ./nvim-tree.nix
             ./oil.nix
             ./options.nix

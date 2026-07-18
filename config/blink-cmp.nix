@@ -9,12 +9,22 @@
       settings = {
         keymap.preset = "super-tab";
         sources = {
-          default = [ "lsp" "path" "snippets" "buffer" "emoji" ];
+          default = [ "lsp" "path" "snippets" "buffer" "emoji" "notes_wiki" "notes_slash" ];
           providers.emoji = {
             module = "blink-emoji";
             name = "Emoji";
             score_offset = 15;
             opts.insert = true;
+          };
+          providers.notes_wiki = {
+            module = "notes.completion.wiki";
+            name = "Notes Wiki";
+            score_offset = 100;
+          };
+          providers.notes_slash = {
+            module = "notes.completion.slash";
+            name = "Notes Slash";
+            score_offset = 100;
           };
         };
         completion = {

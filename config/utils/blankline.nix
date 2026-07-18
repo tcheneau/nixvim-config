@@ -4,7 +4,7 @@
     settings = {
       indent = {
         smart_indent_cap = true;
-        char = " ";
+        char = "│";
       };
       scope = {
         enabled = true;

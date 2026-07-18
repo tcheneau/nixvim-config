@@ -18,6 +18,12 @@
       options.desc = "Open parent directory in Oil";
     }
     {
+      mode = "n";
+      key = "<leader>ti";
+      action = "<CMD>ToggleImages<CR>";
+      options.desc = "Toggle image rendering";
+    }
+    {
       key = "<leader>c";
       action = "+context";
     }

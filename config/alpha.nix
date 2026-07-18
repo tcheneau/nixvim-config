@@ -18,7 +18,7 @@
             "                                                   ░▒░▒▒░                               "
             "                                                 ░▒░▒▒░                                 "
             "                                                ░░▒▒░                                   "
-            "                                ░▒▒▒▒▒▒▒▒▒▒░   ▒░▒▒░                                    "
+            "                                ░▒▒▒▒▒▒▒▒▒░   ▒░▒▒░                                    "
             "                            ░░▒▒▒▒▒▓▓▓▓▓▒▒░░▒▒▒▒▒░                                      "
             "                          ░░▒░▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒░                                       "
             "                         ░▒░░▓▓██▓▓▒▓▒▒▓▓▓█▓░▒▒▒▒▒                                      "
@@ -29,12 +29,12 @@
             "                     ▒▒▒▓▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒                                 "
             "                    ▒▓▓▓▓▒▒▒▒░░░▒▒▒▒▒▒▒▒▒░▒▒▒▒▒▒▒▒▒▒▒▒▒░                                "
             "                    ▒▓▓▓▓▒▒▓▓▒▒░░▒▒▒▒▒▒▒▒▒▒▒▒▒▓▒▒▒▒▒▓▒▒▒                                "
-            "                   ░▒▒▒▓▓▓▓▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▓▒▓▓▓▓▒                                "
-            "                   ░▒▒▓▓▓▓▒▓▓▓▓▓▓▓▓▓▓▓▒▓▓▓▓▓▓▓▓▒▒▓▒▒▒▓▓▒                                "
+            "                   ░▒▒▒▓▓▓▓▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▓▒▓▓▓▓▒                                "
+            "                   ░▒▒▓▓▓▓▒▓▓▓▓▓▓▓▓▓▓▓▓▒▓▓▓▓▓▓▓▓▒▒▓▒▒▒▓▓▒                                "
             "                   ░▓▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒▓▒                                "
             "                    ▒▓▓▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▓▓▒                                "
             "                    ▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░                                "
-            "                     ▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒                                 "
+            "                     ▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒                                 "
             "                     ░▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░                                 "
             "                     ░░▒▒▒▒▓▓▓▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒░░                                  "
             "                     ░░░▒▒▒▒▒▒▓▒▓▒▓▒▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒░░░                                  "
@@ -65,6 +65,110 @@
                   "n"
                   "n"
                   "<cmd>ene<CR>"
+                  {
+                    noremap = true;
+                    silent = true;
+                    nowait = true;
+                  }
+                ];
+                position = "center";
+                width = 50;
+                align_shortcut = "right";
+                hl_shortcut = "Keyword";
+              };
+            }
+            {
+              type = "padding";
+              val = 1;
+            }
+            {
+              type = "button";
+              val = "      Find File    ";
+              on_press.__raw = "function() vim.cmd[[Telescope find_files]] end";
+              opts = {
+                shortcut = "f";
+                keymap = [
+                  "n"
+                  "f"
+                  "<cmd>Telescope find_files<CR>"
+                  {
+                    noremap = true;
+                    silent = true;
+                    nowait = true;
+                  }
+                ];
+                position = "center";
+                width = 50;
+                align_shortcut = "right";
+                hl_shortcut = "Keyword";
+              };
+            }
+            {
+              type = "padding";
+              val = 1;
+            }
+            {
+              type = "button";
+              val = "      Recent Files    ";
+              on_press.__raw = "function() vim.cmd[[Telescope oldfiles]] end";
+              opts = {
+                shortcut = "r";
+                keymap = [
+                  "n"
+                  "r"
+                  "<cmd>Telescope oldfiles<CR>"
+                  {
+                    noremap = true;
+                    silent = true;
+                    nowait = true;
+                  }
+                ];
+                position = "center";
+                width = 50;
+                align_shortcut = "right";
+                hl_shortcut = "Keyword";
+              };
+            }
+            {
+              type = "padding";
+              val = 1;
+            }
+            {
+              type = "button";
+              val = "      Live Grep    ";
+              on_press.__raw = "function() vim.cmd[[Telescope live_grep]] end";
+              opts = {
+                shortcut = "g";
+                keymap = [
+                  "n"
+                  "g"
+                  "<cmd>Telescope live_grep<CR>"
+                  {
+                    noremap = true;
+                    silent = true;
+                    nowait = true;
+                  }
+                ];
+                position = "center";
+                width = 50;
+                align_shortcut = "right";
+                hl_shortcut = "Keyword";
+              };
+            }
+            {
+              type = "padding";
+              val = 1;
+            }
+            {
+              type = "button";
+              val = "      LazyGit    ";
+              on_press.__raw = "function() vim.cmd[[LazyGit]] end";
+              opts = {
+                shortcut = "l";
+                keymap = [
+                  "n"
+                  "l"
+                  "<cmd>LazyGit<CR>"
                   {
                     noremap = true;
                     silent = true;
