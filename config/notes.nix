@@ -34,6 +34,7 @@ in
     { mode = "n"; key = "<leader>nl"; action = "<CMD>NotesFollowLink<CR>"; options.desc = "Follow link"; }
     { mode = "n"; key = "<leader>ni"; action = "<CMD>NotesTemplate<CR>"; options.desc = "Insert template"; }
     { mode = "n"; key = "<leader>ne"; action = "<CMD>NotesExport<CR>"; options.desc = "Export (pandoc)"; }
+    { mode = "n"; key = "<leader>no"; action = "<CMD>NotesExportOpen<CR>"; options.desc = "Export & open in browser"; }
     { mode = "n"; key = "<leader>ng"; action = "<CMD>NotesGit<CR>"; options.desc = "LazyGit in notes dir"; }
     { mode = "n"; key = "<leader>nt"; action = "<CMD>NotesTags<CR>"; options.desc = "Search tags"; }
   ];

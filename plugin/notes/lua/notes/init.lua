@@ -75,8 +75,21 @@ function M.setup(opts)
     end,
   })
 
+  vim.api.nvim_create_user_command("NotesExportOpen", function(args)
+    require("notes.export").export_and_open(M.config, args.args)
+  end, {
+    nargs = "?",
+    complete = function()
+      return { "html", "pdf" }
+    end,
+  })
+
   vim.api.nvim_create_user_command("NotesGit", function()
     require("notes.git").open(M.config)
+  end, {})
+
+  vim.api.nvim_create_user_command("NotesTable", function()
+    require("notes.table").create(M.config)
   end, {})
 end
 

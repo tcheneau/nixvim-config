@@ -1,20 +1,42 @@
 -- blink-cmp source for [[wiki link]] completion
 local M = {}
 
-function M.get_completions(ctx, callback)
+function M.new(opts)
+  local self = setmetatable({}, { __index = M })
+  self.opts = opts or {}
+  return self
+end
+
+function M:get_trigger_characters()
+  return { "[" }
+end
+
+function M:enabled()
   local config = require("notes").config
-  if not config then return callback({ items = {} }) end
+  if not config then return false end
+  local utils = require("notes.utils")
+  return utils.is_notes_buffer(config)
+end
+
+function M:get_completions(context, callback)
+  local config = require("notes").config
+  if not config then
+    callback({ items = {}, is_incomplete_forward = true, is_incomplete_backward = true })
+    return function() end
+  end
 
   local utils = require("notes.utils")
   if not utils.is_notes_buffer(config) then
-    return callback({ items = {} })
+    callback({ items = {}, is_incomplete_forward = true, is_incomplete_backward = true })
+    return function() end
   end
 
   -- Check if we're inside [[... (no closing ]])
-  local before = ctx.line:sub(1, ctx.cursor[2])
+  local before = context.line:sub(1, context.cursor[2])
   local link_start = before:match("%[%[([^%]]*)$")
   if not link_start then
-    return callback({ items = {} })
+    callback({ items = {}, is_incomplete_forward = true, is_incomplete_backward = true })
+    return function() end
   end
 
   -- Get all page names and filter
@@ -32,7 +54,7 @@ function M.get_completions(ctx, callback)
     end
   end
 
-  callback({ items = items })
+  callback({ items = items, is_incomplete_forward = true, is_incomplete_backward = true })
   return function() end
 end
 

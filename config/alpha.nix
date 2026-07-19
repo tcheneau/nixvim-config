@@ -83,6 +83,58 @@
             }
             {
               type = "button";
+              val = "   󰀰   New Note    ";
+              on_press.__raw = "function() vim.cmd[[NotesNew]] end";
+              opts = {
+                shortcut = "o";
+                keymap = [
+                  "n"
+                  "o"
+                  "<cmd>NotesNew<CR>"
+                  {
+                    noremap = true;
+                    silent = true;
+                    nowait = true;
+                  }
+                ];
+                position = "center";
+                width = 50;
+                align_shortcut = "right";
+                hl_shortcut = "Keyword";
+              };
+            }
+            {
+              type = "padding";
+              val = 1;
+            }
+            {
+              type = "button";
+              val = "   󰁞   Journal    ";
+              on_press.__raw = "function() vim.cmd[[NotesJournal]] end";
+              opts = {
+                shortcut = "j";
+                keymap = [
+                  "n"
+                  "j"
+                  "<cmd>NotesJournal<CR>"
+                  {
+                    noremap = true;
+                    silent = true;
+                    nowait = true;
+                  }
+                ];
+                position = "center";
+                width = 50;
+                align_shortcut = "right";
+                hl_shortcut = "Keyword";
+              };
+            }
+            {
+              type = "padding";
+              val = 1;
+            }
+            {
+              type = "button";
               val = "      Find File    ";
               on_press.__raw = "function() vim.cmd[[Telescope find_files]] end";
               opts = {

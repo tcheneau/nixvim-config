@@ -29,38 +29,69 @@ local slash_commands = {
   },
   {
     label = "journal",
-    insert = nil, -- handled specially
+    insert = nil,
     desc = "Open today's journal",
+    action = "journal",
   },
   {
     label = "template",
-    insert = nil, -- handled specially
+    insert = nil,
     desc = "Insert a template (pick from list)",
+    action = "template",
+  },
+  {
+    label = "table",
+    insert = nil,
+    desc = "Create a markdown table",
+    action = "table",
   },
 }
 
-function M.get_completions(ctx, callback)
+function M.new(opts)
+  local self = setmetatable({}, { __index = M })
+  self.opts = opts or {}
+  return self
+end
+
+function M:get_trigger_characters()
+  return { "/" }
+end
+
+function M:enabled()
   local config = require("notes").config
-  if not config then return callback({ items = {} }) end
+  if not config then return false end
+  local utils = require("notes.utils")
+  return utils.is_notes_buffer(config)
+end
+
+function M:get_completions(context, callback)
+  local config = require("notes").config
+  if not config then
+    callback({ items = {}, is_incomplete_forward = true, is_incomplete_backward = true })
+    return function() end
+  end
 
   local utils = require("notes.utils")
   if not utils.is_notes_buffer(config) then
-    return callback({ items = {} })
+    callback({ items = {}, is_incomplete_forward = true, is_incomplete_backward = true })
+    return function() end
   end
 
   -- Check if line starts with / (possibly after whitespace or list marker)
-  local line = ctx.line
-  local col = ctx.cursor[2]
+  local line = context.line
+  local col = context.cursor[2]
   local before = line:sub(1, col)
 
   -- Match / at start of line, after whitespace, or after "- "
   local slash_pos = before:match("^()%/") or before:match("^%s*()%/") or before:match("^%s*[-*+]%s+()%/")
   if not slash_pos then
-    return callback({ items = {} })
+    callback({ items = {}, is_incomplete_forward = true, is_incomplete_backward = true })
+    return function() end
   end
 
   -- Get the text after / for filtering
   local typed = before:sub(slash_pos + 1)
+  local cursor_line = context.cursor[1] - 1 -- 0-indexed
 
   local items = {}
   for _, cmd in ipairs(slash_commands) do
@@ -73,46 +104,54 @@ function M.get_completions(ctx, callback)
       }
 
       if cmd.insert then
-        -- Use textEdit to replace from / to cursor with the insert text
+        -- Replace /command with the insert text
         item.textEdit = {
           range = {
-            start = { line = ctx.cursor[1] - 1, character = slash_pos - 1 },
-            ["end"] = { line = ctx.cursor[1] - 1, character = col },
+            start = { line = cursor_line, character = slash_pos - 1 },
+            ["end"] = { line = cursor_line, character = col },
           },
           newText = cmd.insert,
         }
-      elseif cmd.label == "journal" then
-        -- Special: open journal instead of inserting text
+      elseif cmd.action then
+        -- Clear the /command text, then execute the action via execute()
         item.textEdit = {
           range = {
-            start = { line = ctx.cursor[1] - 1, character = slash_pos - 1 },
-            ["end"] = { line = ctx.cursor[1] - 1, character = col },
+            start = { line = cursor_line, character = slash_pos - 1 },
+            ["end"] = { line = cursor_line, character = col },
           },
           newText = "",
         }
-        item.command = {
-          command = "NotesJournal",
-        }
-      elseif cmd.label == "template" then
-        -- Special: open template picker
-        item.textEdit = {
-          range = {
-            start = { line = ctx.cursor[1] - 1, character = slash_pos - 1 },
-            ["end"] = { line = ctx.cursor[1] - 1, character = col },
-          },
-          newText = "",
-        }
-        item.command = {
-          command = "NotesTemplate",
-        }
+        item.data = { action = cmd.action }
       end
 
       table.insert(items, item)
     end
   end
 
-  callback({ items = items })
+  callback({ items = items, is_incomplete_forward = true, is_incomplete_backward = true })
   return function() end
+end
+
+--- Handle special actions (journal, template, table) after accepting a completion
+function M:execute(context, item, resolve, default_implementation)
+  if item.data and item.data.action then
+    -- Apply the textEdit first (clears the /command text)
+    default_implementation()
+    -- Schedule the action for after the text edit is applied
+    vim.schedule(function()
+      local action = item.data.action
+      if action == "journal" then
+        vim.cmd("NotesJournal")
+      elseif action == "template" then
+        vim.cmd("NotesTemplate")
+      elseif action == "table" then
+        require("notes.table").create(require("notes").config)
+      end
+    end)
+  else
+    default_implementation()
+  end
+  resolve(item)
 end
 
 return M

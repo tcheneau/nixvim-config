@@ -19,6 +19,7 @@
             ./oil.nix
             ./options.nix
             ./outline.nix
+            ./render-markdown.nix
             ./treesitter.nix
             ./utils/auto-pairs.nix
             ./utils/autosave.nix
