@@ -45,7 +45,7 @@ Descriptions of all the config files/plugins used in this configuration.
 
 | Name | Description |
 | --- | --- |
-| alpha.nix | Greeter/dashboard screen on startup with quick-action buttons. |
+| alpha.nix | Greeter/dashboard screen with quick-action buttons (new note, journal, find file, grep, LazyGit). |
 | auto-pairs.nix | Pairs brackets and quotes automatically. |
 | autosave.nix | Saves changes to disk automatically. |
 | blink-cmp.nix | Performant completion engine with LSP, path, snippet, buffer, and emoji sources. |
@@ -67,6 +67,7 @@ Descriptions of all the config files/plugins used in this configuration.
 | oil.nix | Edit the filesystem like a buffer — replaces netrw. |
 | options.nix | Neovim options and settings. |
 | outline.nix | Document outline/symbols viewer. |
+| render-markdown.nix | In-buffer markdown rendering (headers, tables, code blocks) — scoped to notes directory. |
 | telescope.nix | Extendable fuzzy finder over lists. |
 | toggleterm.nix | Management of multiple terminal windows. |
 | treesitter.nix | Syntax highlighting and indentation based on Tree-sitter. |
@@ -99,13 +100,14 @@ This repository includes a custom Neovim plugin (`plugin/notes/`) for markdown-b
 | `<leader>nn` | `:NotesNew` | Create a new page |
 | `<leader>nl` | `:NotesFollowLink` | Follow [[wiki link]] under cursor |
 | `<leader>ni` | `:NotesTemplate` | Insert a template |
-| `<leader>ne` | `:NotesExport` | Export to HTML/PDF via pandoc |
+| `<leader>ne` | `:NotesExport` | Export to HTML/PDF via pandoc (next to source file) |
+| `<leader>no` | `:NotesExportOpen` | Export to temp file and open in browser |
 | `<leader>ng` | `:NotesGit` | Open LazyGit in notes directory |
 
 ### Completion
 
 - Type `[[` in a notes buffer to autocomplete page names
-- Type `/` at the start of a line for slash commands (`/todo`, `/done`, `/date`, `/time`, `/journal`, `/template`)
+- Type `/` at the start of a line for slash commands (`/todo`, `/done`, `/date`, `/time`, `/weekday`, `/journal`, `/template`, `/table`)
 
 ### Template variables
 
