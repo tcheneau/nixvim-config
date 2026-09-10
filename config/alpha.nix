@@ -135,6 +135,58 @@
             }
             {
               type = "button";
+              val = "   󰈙   Find Note    ";
+              on_press.__raw = "function() vim.cmd[[NotesFind]] end";
+              opts = {
+                shortcut = "p";
+                keymap = [
+                  "n"
+                  "p"
+                  "<cmd>NotesFind<CR>"
+                  {
+                    noremap = true;
+                    silent = true;
+                    nowait = true;
+                  }
+                ];
+                position = "center";
+                width = 50;
+                align_shortcut = "right";
+                hl_shortcut = "Keyword";
+              };
+            }
+            {
+              type = "padding";
+              val = 1;
+            }
+            {
+              type = "button";
+              val = "   󰬎   Search Notes  ";
+              on_press.__raw = "function() vim.cmd[[NotesSearch]] end";
+              opts = {
+                shortcut = "s";
+                keymap = [
+                  "n"
+                  "s"
+                  "<cmd>NotesSearch<CR>"
+                  {
+                    noremap = true;
+                    silent = true;
+                    nowait = true;
+                  }
+                ];
+                position = "center";
+                width = 50;
+                align_shortcut = "right";
+                hl_shortcut = "Keyword";
+              };
+            }
+            {
+              type = "padding";
+              val = 1;
+            }
+            {
+              type = "button";
               val = "      Find File    ";
               on_press.__raw = "function() vim.cmd[[Telescope find_files]] end";
               opts = {

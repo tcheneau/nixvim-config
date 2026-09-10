@@ -25,9 +25,20 @@ function M.setup(opts)
   end
 
   -- Register user commands
-  vim.api.nvim_create_user_command("NotesJournal", function()
-    require("notes.journal").open_today(M.config)
-  end, {})
+  -- NotesJournal: today (no arg), a parsed date (arg), or prompt (empty arg via !)
+  vim.api.nvim_create_user_command("NotesJournal", function(args)
+    require("notes.journal").open(M.config, args.args)
+  end, {
+    nargs = "?",
+    desc = "Open a journal entry. With no argument opens today; with an argument opens that date (YYYY-MM-DD, YYYYMMDD, today, yesterday, +2d, -1w, +1m, ...).",
+  })
+
+  -- NotesJournalDate: always prompt for a date (handy keymap target)
+  vim.api.nvim_create_user_command("NotesJournalDate", function()
+    require("notes.journal").open(M.config, nil)
+  end, {
+    desc = "Prompt for a date and open that journal entry.",
+  })
 
   vim.api.nvim_create_user_command("NotesFind", function()
     require("notes.search").find_pages(M.config)
@@ -91,6 +102,14 @@ function M.setup(opts)
   vim.api.nvim_create_user_command("NotesTable", function()
     require("notes.table").create(M.config)
   end, {})
+
+  -- NotesPasteImage: save the clipboard image into a per-page subfolder and
+  -- insert a markdown image reference at the cursor.
+  vim.api.nvim_create_user_command("NotesPasteImage", function()
+    require("notes.paste").paste(M.config)
+  end, {
+    desc = "Paste image from clipboard: save to <page>/image-<timestamp>.png and insert markdown.",
+  })
 end
 
 return M

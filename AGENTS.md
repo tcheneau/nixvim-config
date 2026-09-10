@@ -210,6 +210,8 @@ For custom plugins not in nixvim, use nixpkgs vimPlugins:
 
 6. **Testing**: `nix flake check` validates configuration builds - run before committing.
 
+7. **New files must be `git add`ed before building**: Nix flakes apply git VCS filtering to local path sources, so only files *tracked* by git are copied into the build. Modified-but-tracked files are included automatically, but **brand-new untracked files are silently excluded** from the derivation. This typically surfaces as a Lua `module '...' not found` error at runtime with no build-time warning. Always `git add` any new file under `config/` or `plugin/` before `nix build`/`nix run`/`nix flake check`. The `result` symlink is a build artifact and should not be committed (consider `git rm --cached result` + `.gitignore`).
+
 7. **flake-parts**: This flake uses flake-parts pattern. Add new inputs at top level, configurations in `perSystem.nixvimConfigurations`.
 
 ## Adding New Plugins

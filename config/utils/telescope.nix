@@ -15,6 +15,12 @@
           desc = "Telescope Git Files";
         };
       };
+      "<C-k>" = {
+        action = "buffers";
+        options = {
+          desc = "Telescope Buffers";
+        };
+      };
     };
     extensions.fzf-native = { enable = true; };
   };

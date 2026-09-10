@@ -8,7 +8,8 @@ let
 in
 {
   # pandoc for :NotesExport, ripgrep is already available via telescope
-  extraPackages = [ pkgs.pandoc ];
+  # xclip/wl-clipboard for :NotesPasteImage clipboard image support on Linux
+  extraPackages = [ pkgs.pandoc pkgs.xclip pkgs.wl-clipboard ];
 
   extraPlugins = [ notes ];
 
@@ -37,5 +38,7 @@ in
     { mode = "n"; key = "<leader>no"; action = "<CMD>NotesExportOpen<CR>"; options.desc = "Export & open in browser"; }
     { mode = "n"; key = "<leader>ng"; action = "<CMD>NotesGit<CR>"; options.desc = "LazyGit in notes dir"; }
     { mode = "n"; key = "<leader>nt"; action = "<CMD>NotesTags<CR>"; options.desc = "Search tags"; }
+    { mode = "n"; key = "<leader>nP"; action = "<CMD>NotesPasteImage<CR>"; options.desc = "Paste image from clipboard"; }
+    { mode = "n"; key = "<leader>nJ"; action = "<CMD>NotesJournalDate<CR>"; options.desc = "Journal (pick date)"; }
   ];
 }
