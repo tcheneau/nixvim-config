@@ -1,319 +1,128 @@
-{
-  plugins = {
-    alpha = {
-      enable = true;
-      settings.layout = [
+{ lib, ... }:
+
+let
+  # Spacing used between dashboard buttons
+  pad1 = {
+    type = "padding";
+    val = 1;
+  };
+  pad2 = {
+    type = "padding";
+    val = 2;
+  };
+
+  # Build an alpha dashboard button from an (icon +) label, shortcut key, and command
+  mkButton = val: shortcut: cmd: {
+    type = "button";
+    inherit val;
+    on_press.__raw = "function() vim.cmd[[${cmd}]] end";
+    opts = {
+      inherit shortcut;
+      keymap = [
+        "n"
+        shortcut
+        "<cmd>${cmd}<CR>"
         {
-          type = "padding";
-          val = 2;
-        }
-        {
-          type = "text";
-          val = [
-            "                                                              ░░                        "
-            "                                                            ░░▒█░                       "
-            "                                                          ░░▒░▒░                        "
-            "                                                       ░░▒░▒▒░                          "
-            "                                                     ░░░░▒▒                             "
-            "                                                   ░▒░▒▒░                               "
-            "                                                 ░▒░▒▒░                                 "
-            "                                                ░░▒▒░                                   "
-            "                                ░▒▒▒▒▒▒▒▒▒░   ▒░▒▒░                                    "
-            "                            ░░▒▒▒▒▒▓▓▓▓▓▒▒░░▒▒▒▒▒░                                      "
-            "                          ░░▒░▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒░                                       "
-            "                         ░▒░░▓▓██▓▓▒▓▒▒▓▓▓█▓░▒▒▒▒▒                                      "
-            "                        ░▒▒▒▒▓█▓▓▒▒▒▒▒▓█▓▓▓▒▓█▓▒░▒▒                                     "
-            "                       ░▒▒░░░▒█▓▒▓▓▓▓▒▓▒▒▓▒███▒▒▒▒▒▒                                    "
-            "                      ░▒▒▒▒▒▒▒▒▓▓▓▓▓▓▓▓█▓██▓▒▒▒▒▒▒▒▒▒░                                  "
-            "                     ░▒▒▒▒▒▒▒▒░░░░▒▒▒▒▒▒▒▒▒░░░▒▒▒▒▒▒▒▒░                                 "
-            "                     ▒▒▒▓▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒                                 "
-            "                    ▒▓▓▓▓▒▒▒▒░░░▒▒▒▒▒▒▒▒▒░▒▒▒▒▒▒▒▒▒▒▒▒▒░                                "
-            "                    ▒▓▓▓▓▒▒▓▓▒▒░░▒▒▒▒▒▒▒▒▒▒▒▒▒▓▒▒▒▒▒▓▒▒▒                                "
-            "                   ░▒▒▒▓▓▓▓▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▓▒▓▓▓▓▒                                "
-            "                   ░▒▒▓▓▓▓▒▓▓▓▓▓▓▓▓▓▓▓▓▒▓▓▓▓▓▓▓▓▒▒▓▒▒▒▓▓▒                                "
-            "                   ░▓▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒▓▒                                "
-            "                    ▒▓▓▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▓▓▒                                "
-            "                    ▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░                                "
-            "                     ▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒                                 "
-            "                     ░▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░                                 "
-            "                     ░░▒▒▒▒▓▓▓▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒░░                                  "
-            "                     ░░░▒▒▒▒▒▒▓▒▓▒▓▒▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒░░░                                  "
-            "                      ░░░░▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓▒▒▒▒▒▒▒▒░░░░                                   "
-            "                        ░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▒▒▒░░░░░                                     "
-            "                          ░░░░░░▒▒▒▒▒▒▒▒▒░░░░░░░░                                       "
-            "                            ░░░░░░░░░░░░░░░░░                                           "
-          ];
-          opts = {
-            position = "center";
-            hl = "Type";
-          };
-        }
-        {
-          type = "padding";
-          val = 4;
-        }
-        {
-          type = "group";
-          val = [
-            {
-              type = "button";
-              val = "      New File    ";
-              on_press.__raw = "function() vim.cmd[[ene]] end";
-              opts = {
-                shortcut = "n";
-                keymap = [
-                  "n"
-                  "n"
-                  "<cmd>ene<CR>"
-                  {
-                    noremap = true;
-                    silent = true;
-                    nowait = true;
-                  }
-                ];
-                position = "center";
-                width = 50;
-                align_shortcut = "right";
-                hl_shortcut = "Keyword";
-              };
-            }
-            {
-              type = "padding";
-              val = 1;
-            }
-            {
-              type = "button";
-              val = "   󰀰   New Note    ";
-              on_press.__raw = "function() vim.cmd[[NotesNew]] end";
-              opts = {
-                shortcut = "o";
-                keymap = [
-                  "n"
-                  "o"
-                  "<cmd>NotesNew<CR>"
-                  {
-                    noremap = true;
-                    silent = true;
-                    nowait = true;
-                  }
-                ];
-                position = "center";
-                width = 50;
-                align_shortcut = "right";
-                hl_shortcut = "Keyword";
-              };
-            }
-            {
-              type = "padding";
-              val = 1;
-            }
-            {
-              type = "button";
-              val = "   󰁞   Journal    ";
-              on_press.__raw = "function() vim.cmd[[NotesJournal]] end";
-              opts = {
-                shortcut = "j";
-                keymap = [
-                  "n"
-                  "j"
-                  "<cmd>NotesJournal<CR>"
-                  {
-                    noremap = true;
-                    silent = true;
-                    nowait = true;
-                  }
-                ];
-                position = "center";
-                width = 50;
-                align_shortcut = "right";
-                hl_shortcut = "Keyword";
-              };
-            }
-            {
-              type = "padding";
-              val = 1;
-            }
-            {
-              type = "button";
-              val = "   󰈙   Find Note    ";
-              on_press.__raw = "function() vim.cmd[[NotesFind]] end";
-              opts = {
-                shortcut = "p";
-                keymap = [
-                  "n"
-                  "p"
-                  "<cmd>NotesFind<CR>"
-                  {
-                    noremap = true;
-                    silent = true;
-                    nowait = true;
-                  }
-                ];
-                position = "center";
-                width = 50;
-                align_shortcut = "right";
-                hl_shortcut = "Keyword";
-              };
-            }
-            {
-              type = "padding";
-              val = 1;
-            }
-            {
-              type = "button";
-              val = "   󰬎   Search Notes  ";
-              on_press.__raw = "function() vim.cmd[[NotesSearch]] end";
-              opts = {
-                shortcut = "s";
-                keymap = [
-                  "n"
-                  "s"
-                  "<cmd>NotesSearch<CR>"
-                  {
-                    noremap = true;
-                    silent = true;
-                    nowait = true;
-                  }
-                ];
-                position = "center";
-                width = 50;
-                align_shortcut = "right";
-                hl_shortcut = "Keyword";
-              };
-            }
-            {
-              type = "padding";
-              val = 1;
-            }
-            {
-              type = "button";
-              val = "      Find File    ";
-              on_press.__raw = "function() vim.cmd[[Telescope find_files]] end";
-              opts = {
-                shortcut = "f";
-                keymap = [
-                  "n"
-                  "f"
-                  "<cmd>Telescope find_files<CR>"
-                  {
-                    noremap = true;
-                    silent = true;
-                    nowait = true;
-                  }
-                ];
-                position = "center";
-                width = 50;
-                align_shortcut = "right";
-                hl_shortcut = "Keyword";
-              };
-            }
-            {
-              type = "padding";
-              val = 1;
-            }
-            {
-              type = "button";
-              val = "      Recent Files    ";
-              on_press.__raw = "function() vim.cmd[[Telescope oldfiles]] end";
-              opts = {
-                shortcut = "r";
-                keymap = [
-                  "n"
-                  "r"
-                  "<cmd>Telescope oldfiles<CR>"
-                  {
-                    noremap = true;
-                    silent = true;
-                    nowait = true;
-                  }
-                ];
-                position = "center";
-                width = 50;
-                align_shortcut = "right";
-                hl_shortcut = "Keyword";
-              };
-            }
-            {
-              type = "padding";
-              val = 1;
-            }
-            {
-              type = "button";
-              val = "      Live Grep    ";
-              on_press.__raw = "function() vim.cmd[[Telescope live_grep]] end";
-              opts = {
-                shortcut = "g";
-                keymap = [
-                  "n"
-                  "g"
-                  "<cmd>Telescope live_grep<CR>"
-                  {
-                    noremap = true;
-                    silent = true;
-                    nowait = true;
-                  }
-                ];
-                position = "center";
-                width = 50;
-                align_shortcut = "right";
-                hl_shortcut = "Keyword";
-              };
-            }
-            {
-              type = "padding";
-              val = 1;
-            }
-            {
-              type = "button";
-              val = "      LazyGit    ";
-              on_press.__raw = "function() vim.cmd[[LazyGit]] end";
-              opts = {
-                shortcut = "l";
-                keymap = [
-                  "n"
-                  "l"
-                  "<cmd>LazyGit<CR>"
-                  {
-                    noremap = true;
-                    silent = true;
-                    nowait = true;
-                  }
-                ];
-                position = "center";
-                width = 50;
-                align_shortcut = "right";
-                hl_shortcut = "Keyword";
-              };
-            }
-            {
-              type = "padding";
-              val = 2;
-            }
-            {
-              type = "button";
-              val = "      Quit Neovim    ";
-              on_press.__raw = "function() vim.cmd[[qa]] end";
-              opts = {
-                shortcut = "q";
-                keymap = [
-                  "n"
-                  "q"
-                  "<cmd>qa<CR>"
-                  {
-                    noremap = true;
-                    silent = true;
-                    nowait = true;
-                  }
-                ];
-                position = "center";
-                width = 50;
-                align_shortcut = "right";
-                hl_shortcut = "Keyword";
-              };
-            }
-          ];
+          noremap = true;
+          silent = true;
+          nowait = true;
         }
       ];
+      position = "center";
+      width = 50;
+      align_shortcut = "right";
+      hl_shortcut = "Keyword";
     };
+  };
+
+  buttons = [
+    (mkButton "      New File    " "n" "ene")
+    (mkButton "   󰀰   New Note    " "o" "NotesNew")
+    (mkButton "   󰁞   Journal    " "j" "NotesJournal")
+    (mkButton "   󰈙   Find Note    " "p" "NotesFind")
+    (mkButton "   󰬎   Search Notes  " "s" "NotesSearch")
+    (mkButton "      Find File    " "f" "Telescope find_files")
+    (mkButton "      Recent Files    " "r" "Telescope oldfiles")
+    (mkButton "      Live Grep    " "g" "Telescope live_grep")
+    (mkButton "      LazyGit    " "l" "LazyGit")
+    (mkButton "      Quit Neovim    " "q" "qa")
+  ];
+
+  # Preserve the original spacing: one pad between buttons,
+  # with extra breathing room before the Quit button
+  # (lib.flatten is needed because lib.init above returns a list of
+  # [ button padding ] pairs, and alpha expects a flat element list)
+  buttonGroup =
+    lib.flatten (
+      lib.init (
+        map (b: [
+          b
+          pad1
+        ]) buttons
+      )
+    )
+    ++ [
+      pad2
+      (lib.last buttons)
+    ];
+in
+{
+  plugins.alpha = {
+    enable = true;
+    settings.layout = [
+      {
+        type = "padding";
+        val = 2;
+      }
+      {
+        type = "text";
+        val = [
+          "                                                              ░░                        "
+          "                                                            ░░▒█░                       "
+          "                                                          ░░▒░▒░                        "
+          "                                                       ░░▒░▒▒░                          "
+          "                                                     ░░░░▒▒                             "
+          "                                                   ░▒░▒▒░                               "
+          "                                                 ░▒░▒▒░                                 "
+          "                                                ░░▒▒░                                   "
+          "                                ░▒▒▒▒▒▒▒▒▒░   ▒░▒▒░                                    "
+          "                            ░░▒▒▒▒▒▓▓▓▓▓▒▒░░▒▒▒▒▒░                                      "
+          "                          ░░▒░▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒░                                       "
+          "                         ░▒░░▓▓██▓▓▒▓▒▒▓▓▓█▓░▒▒▒▒▒                                      "
+          "                        ░▒▒▒▒▓█▓▓▒▒▒▒▒▓█▓▓▓▒▓█▓▒░▒▒                                     "
+          "                       ░▒▒░░░▒█▓▒▓▓▓▓▒▓▒▒▓▒███▒▒▒▒▒▒                                    "
+          "                      ░▒▒▒▒▒▒▒▒▓▓▓▓▓▓▓▓█▓██▓▒▒▒▒▒▒▒▒▒░                                  "
+          "                     ░▒▒▒▒▒▒▒▒░░░░▒▒▒▒▒▒▒▒▒░░░▒▒▒▒▒▒▒▒░                                 "
+          "                     ▒▒▒▓▒▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒                                 "
+          "                    ▒▓▓▓▓▒▒▒▒░░░▒▒▒▒▒▒▒▒▒░▒▒▒▒▒▒▒▒▒▒▒▒▒░                                "
+          "                    ▒▓▓▓▓▒▒▓▓▒▒░░▒▒▒▒▒▒▒▒▒▒▒▒▒▓▒▒▒▒▒▓▒▒▒                                "
+          "                   ░▒▒▒▓▓▓▓▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▓▒▓▓▓▓▒                                "
+          "                   ░▒▒▓▓▓▓▒▓▓▓▓▓▓▓▓▓▓▓▓▒▓▓▓▓▓▓▓▓▒▒▓▒▒▒▓▓▒                                "
+          "                   ░▓▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒▓▒                                "
+          "                    ▒▓▓▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▓▓▒                                "
+          "                    ▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░                                "
+          "                     ▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒                                 "
+          "                     ░▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░                                 "
+          "                     ░░▒▒▒▒▓▓▓▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒░░                                  "
+          "                     ░░░▒▒▒▒▒▒▓▒▓▒▓▒▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒░░░                                  "
+          "                      ░░░░▒▒▒▒▒▒▒▒▒▓▓▓▓▓▓▒▒▒▒▒▒▒▒░░░░                                   "
+          "                        ░░░░▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▒▒▒░░░░░                                     "
+          "                          ░░░░░░▒▒▒▒▒▒▒▒▒░░░░░░░░                                       "
+          "                            ░░░░░░░░░░░░░░░░░                                           "
+        ];
+        opts = {
+          position = "center";
+          hl = "Type";
+        };
+      }
+      {
+        type = "padding";
+        val = 4;
+      }
+      {
+        type = "group";
+        val = buttonGroup;
+      }
+    ];
   };
 }

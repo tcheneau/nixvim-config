@@ -9,7 +9,15 @@
       settings = {
         keymap.preset = "super-tab";
         sources = {
-          default = [ "lsp" "path" "snippets" "buffer" "emoji" "notes_wiki" "notes_slash" ];
+          default = [
+            "lsp"
+            "path"
+            "snippets"
+            "buffer"
+            "emoji"
+            "notes_wiki"
+            "notes_slash"
+          ];
           providers.emoji = {
             module = "blink-emoji";
             name = "Emoji";

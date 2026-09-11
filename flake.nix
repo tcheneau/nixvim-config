@@ -38,7 +38,7 @@
       };
 
       perSystem =
-        { system, ... }:
+        { system, pkgs, ... }:
         {
           # You can define actual Nixvim configurations here
           nixvimConfigurations = {
@@ -49,6 +49,25 @@
               ];
             };
           };
+
+          # Development environment, previously in shell.nix
+          # `nix develop`
+          devShells.default = pkgs.mkShell {
+            packages = with pkgs; [
+              # Rust
+              cargo
+              rustc
+
+              # Go
+              go
+
+              # Tools
+              ripgrep
+            ];
+          };
+
+          # `nix fmt`
+          formatter = pkgs.nixfmt;
         };
     };
 }

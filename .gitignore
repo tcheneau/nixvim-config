@@ -1,0 +1,9 @@
+# Nix build outputs
+/result
+/result-*
+
+# Direnv
+/.direnv/
+
+# OS/editor junk
+.DS_Store

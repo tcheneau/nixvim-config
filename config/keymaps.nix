@@ -1,7 +1,9 @@
 {
   globals.mapleader = " ";
 
-  diagnostic.settings = { virtual_text = true; };
+  diagnostic.settings = {
+    virtual_text = true;
+  };
 
   keymaps = [
     # Global
@@ -40,7 +42,8 @@
       action = "+find/file";
     }
     {
-      # Format file
+      # Format the current buffer with conform (falls back to LSP)
+      mode = "n";
       key = "<leader>fm";
       action = "<CMD>lua require('conform').format({ lsp_format = 'fallback' })<CR>";
       options.desc = "Format the current buffer";

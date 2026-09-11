@@ -14,10 +14,18 @@
     };
     settings = {
       formatters_by_ft = {
-        go = [ "goimports" "golines" ];
+        go = [
+          "goimports"
+          "golines"
+        ];
         nix = [ "nixfmt" ];
         markdown = [ "markdownlint" ];
-        sh = [ "shellharden" "shfmt" ];
+        # shfmt normalizes first, shellharden hardens on top;
+        # the other way around shfmt would undo the hardening
+        sh = [
+          "shfmt"
+          "shellharden"
+        ];
       };
       format_on_save = {
         lsp_format = "fallback";

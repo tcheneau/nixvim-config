@@ -23,9 +23,12 @@
       })
 
       -- Toggle image rendering in markdown buffers
+      -- Sets images_toggled so the FileType default (disabled) doesn't clobber
+      -- the user's choice when the buffer is reloaded
       vim.api.nvim_create_user_command("ToggleImages", function()
         local buf = vim.api.nvim_get_current_buf()
-        if not vim.b[buf].images_disabled then
+        vim.b[buf].images_toggled = true
+        if vim.b[buf].images_disabled then
           -- Currently disabled, enable by reloading buffer
           vim.b[buf].images_disabled = false
           vim.cmd("edit")
@@ -38,12 +41,14 @@
         end
       end, {})
 
-      -- Default: disable image rendering on all markdown buffers
-      -- and prevent images from rendering until explicitly toggled on
       vim.api.nvim_create_autocmd("FileType", {
         pattern = "markdown",
         callback = function(args)
-          vim.b[args.buf].images_disabled = true
+          -- Default: disable image rendering on markdown buffers (unless the
+          -- user explicitly toggled this buffer)
+          if not vim.b[args.buf].images_toggled then
+            vim.b[args.buf].images_disabled = true
+          end
         end,
       })
       vim.api.nvim_create_autocmd({ "BufWinEnter", "TextChanged", "TextChangedI", "WinResized" }, {

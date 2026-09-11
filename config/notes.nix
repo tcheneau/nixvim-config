@@ -9,7 +9,11 @@ in
 {
   # pandoc for :NotesExport, ripgrep is already available via telescope
   # xclip/wl-clipboard for :NotesPasteImage clipboard image support on Linux
-  extraPackages = [ pkgs.pandoc pkgs.xclip pkgs.wl-clipboard ];
+  extraPackages = [
+    pkgs.pandoc
+    pkgs.xclip
+    pkgs.wl-clipboard
+  ];
 
   extraPlugins = [ notes ];
 
@@ -25,20 +29,94 @@ in
   '';
 
   keymaps = [
-    { mode = "n"; key = "<leader>n"; action = "+notes"; }
-    { mode = "n"; key = "<leader>nj"; action = "<CMD>NotesJournal<CR>"; options.desc = "Journal (today)"; }
-    { mode = "n"; key = "<leader>np"; action = "<CMD>NotesFind<CR>"; options.desc = "Find page"; }
-    { mode = "n"; key = "<leader>nw"; action = "<CMD>NotesSearch<CR>"; options.desc = "Search words"; }
-    { mode = "n"; key = "<leader>nb"; action = "<CMD>NotesBacklinks<CR>"; options.desc = "Backlinks"; }
-    { mode = "n"; key = "<leader>nd"; action = "<CMD>NotesToggleTask<CR>"; options.desc = "Toggle task"; }
-    { mode = "n"; key = "<leader>nn"; action = "<CMD>NotesNew<CR>"; options.desc = "New page"; }
-    { mode = "n"; key = "<leader>nl"; action = "<CMD>NotesFollowLink<CR>"; options.desc = "Follow link"; }
-    { mode = "n"; key = "<leader>ni"; action = "<CMD>NotesTemplate<CR>"; options.desc = "Insert template"; }
-    { mode = "n"; key = "<leader>ne"; action = "<CMD>NotesExport<CR>"; options.desc = "Export (pandoc)"; }
-    { mode = "n"; key = "<leader>no"; action = "<CMD>NotesExportOpen<CR>"; options.desc = "Export & open in browser"; }
-    { mode = "n"; key = "<leader>ng"; action = "<CMD>NotesGit<CR>"; options.desc = "LazyGit in notes dir"; }
-    { mode = "n"; key = "<leader>nt"; action = "<CMD>NotesTags<CR>"; options.desc = "Search tags"; }
-    { mode = "n"; key = "<leader>nP"; action = "<CMD>NotesPasteImage<CR>"; options.desc = "Paste image from clipboard"; }
-    { mode = "n"; key = "<leader>nJ"; action = "<CMD>NotesJournalDate<CR>"; options.desc = "Journal (pick date)"; }
+    {
+      mode = "n";
+      key = "<leader>n";
+      action = "+notes";
+    }
+    {
+      mode = "n";
+      key = "<leader>nj";
+      action = "<CMD>NotesJournal<CR>";
+      options.desc = "Journal (today)";
+    }
+    {
+      mode = "n";
+      key = "<leader>np";
+      action = "<CMD>NotesFind<CR>";
+      options.desc = "Find page";
+    }
+    {
+      mode = "n";
+      key = "<leader>nw";
+      action = "<CMD>NotesSearch<CR>";
+      options.desc = "Search words";
+    }
+    {
+      mode = "n";
+      key = "<leader>nb";
+      action = "<CMD>NotesBacklinks<CR>";
+      options.desc = "Backlinks";
+    }
+    {
+      mode = "n";
+      key = "<leader>nd";
+      action = "<CMD>NotesToggleTask<CR>";
+      options.desc = "Toggle task";
+    }
+    {
+      mode = "n";
+      key = "<leader>nn";
+      action = "<CMD>NotesNew<CR>";
+      options.desc = "New page";
+    }
+    {
+      mode = "n";
+      key = "<leader>nl";
+      action = "<CMD>NotesFollowLink<CR>";
+      options.desc = "Follow link";
+    }
+    {
+      mode = "n";
+      key = "<leader>ni";
+      action = "<CMD>NotesTemplate<CR>";
+      options.desc = "Insert template";
+    }
+    {
+      mode = "n";
+      key = "<leader>ne";
+      action = "<CMD>NotesExport<CR>";
+      options.desc = "Export (pandoc)";
+    }
+    {
+      mode = "n";
+      key = "<leader>no";
+      action = "<CMD>NotesExportOpen<CR>";
+      options.desc = "Export & open in browser";
+    }
+    {
+      mode = "n";
+      key = "<leader>ng";
+      action = "<CMD>NotesGit<CR>";
+      options.desc = "LazyGit in notes dir";
+    }
+    {
+      mode = "n";
+      key = "<leader>nt";
+      action = "<CMD>NotesTags<CR>";
+      options.desc = "Search tags";
+    }
+    {
+      mode = "n";
+      key = "<leader>nP";
+      action = "<CMD>NotesPasteImage<CR>";
+      options.desc = "Paste image from clipboard";
+    }
+    {
+      mode = "n";
+      key = "<leader>nJ";
+      action = "<CMD>NotesJournalDate<CR>";
+      options.desc = "Journal (pick date)";
+    }
   ];
 }
