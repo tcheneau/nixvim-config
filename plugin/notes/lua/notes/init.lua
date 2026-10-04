@@ -9,6 +9,10 @@ local defaults = {
   pages_dir = "~/notes/pages",
   journal_template = "daily",
   default_template = nil,
+  -- Clipboard backend for NotesPasteImage: "auto" detects the session
+  -- (Wayland first when WAYLAND_DISPLAY is set, X11 otherwise) and always
+  -- falls back to the other stack; or force "wayland" / "x11".
+  clipboard_image_backend = "auto",
 }
 
 function M.setup(opts)

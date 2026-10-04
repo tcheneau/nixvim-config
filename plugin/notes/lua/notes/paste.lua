@@ -1,54 +1,115 @@
 local M = {}
 
---- Detect the best available clipboard image target, or nil if none.
--- Tries Wayland (wl-paste) first, then X11 (xclip). Returns the MIME target
--- string (e.g. "image/png") that can be passed to the read command, plus the
--- backend name; or nil if no image is on the clipboard.
-local function detect_clipboard_image()
-  local backends = {
-    wl = {
-      check = "wl-paste --list-targets 2>/dev/null",
-      read = function(target, dest) -- wl-paste -t image/png > file
-        return string.format("wl-paste -t %s > %s", vim.fn.shellescape(target), vim.fn.shellescape(dest))
-      end,
-    },
-    xclip = {
-      check = "xclip -selection clipboard -t TARGETS -o 2>/dev/null",
-      read = function(target, dest)
-        return string.format("xclip -selection clipboard -o -t %s > %s", vim.fn.shellescape(target), vim.fn.shellescape(dest))
-      end,
-    },
-  }
 
-  for name, b in pairs(backends) do
-    if vim.fn.executable(name == "wl" and "wl-paste" or "xclip") == 1 then
+--- Clipboard backends for NotesPasteImage. `check` must exit 0 and print the
+--- offered MIME targets (one per line) to stdout; `dump` then writes the
+--- bytes of a given MIME target to a file.
+--
+-- NOTE: the wl-paste flag is --list-types; there is no --list-targets option
+-- in any wl-clipboard release (2.2.1/2.3.0 both agree), so a wrong flag made
+-- the check exit 1 and the Wayland backend was silently skipped every time.
+-- Behaviour (per wl-paste.c): one MIME type per line on success, non-zero
+-- exit with "Nothing is copied" when the clipboard is empty.
+local backends = {
+  wayland = {
+    binary = "wl-paste",
+    check = "wl-paste --list-types 2>&1",
+    dump = function(target, dest) -- wl-paste -t image/png > file
+      return string.format("wl-paste -t %s > %s", vim.fn.shellescape(target), vim.fn.shellescape(dest))
+    end,
+  },
+  x11 = {
+    binary = "xclip",
+    check = "xclip -selection clipboard -t TARGETS -o 2>&1",
+    dump = function(target, dest)
+      return string.format("xclip -selection clipboard -o -t %s > %s", vim.fn.shellescape(target), vim.fn.shellescape(dest))
+    end,
+  },
+}
+
+--- Preferred file extension for clipboard image MIME targets we can handle.
+local image_extensions = {
+  ["image/png"] = "png",
+  ["image/jpeg"] = "jpg",
+  ["image/jpg"] = "jpg",
+  ["image/gif"] = "gif",
+  ["image/bmp"] = "bmp",
+  ["image/webp"] = "webp",
+  ["image/tiff"] = "tif",
+}
+
+--- File extension to use for a clipboard image MIME target (png fallback).
+function M.image_extension(target)
+  return image_extensions[target] or "png"
+end
+
+--- Ordered clipboard backend candidate list for the execution context.
+-- config.clipboard_image_backend ("auto" | "wayland" | "x11"; default
+-- "auto") forces a stack, otherwise the environment decides: Wayland first
+-- when WAYLAND_DISPLAY is set or XDG_SESSION_TYPE is "wayland", X11 first
+-- when only DISPLAY is set or XDG_SESSION_TYPE is "x11". The other stack
+-- always stays as a harmless fallback.
+local function backend_order(config)
+  local forced = config and config.clipboard_image_backend or nil
+  if forced == "wayland" or forced == "x11" then
+    return { forced, forced == "wayland" and "x11" or "wayland" }
+  end
+
+  local session = vim.env.XDG_SESSION_TYPE or ""
+  local on_wayland = (vim.env.WAYLAND_DISPLAY ~= nil and vim.env.WAYLAND_DISPLAY ~= "") or session == "wayland"
+  local on_x11 = (vim.env.DISPLAY ~= nil and vim.env.DISPLAY ~= "") or session == "x11"
+  if on_x11 and not on_wayland then
+    return { "x11", "wayland" }
+  end
+  return { "wayland", "x11" }
+end
+
+--- Detect the best available clipboard image target, or nil if none.
+-- Probes the backends in context order (see backend_order): run its check,
+-- then pick image/png if offered, else the first image/* target. Returns
+-- the MIME target string (e.g. "image/png") that can be passed to `dump`,
+-- the backend name, and a human-readable reason string when no image could
+-- be found (missing binary, backend failure, or text-only clipboard).
+-- Exposed for testing.
+function M.detect_clipboard_image(config)
+  local reasons = {}
+  for _, name in ipairs(backend_order(config)) do
+    local b = backends[name]
+    if vim.fn.executable(b.binary) ~= 1 then
+      reasons[#reasons + 1] = name .. ": " .. b.binary .. " not found in $PATH"
+    else
       local out = vim.fn.system(b.check)
-      if vim.v.shell_error == 0 then
-        -- Prefer image/png, otherwise first image/* target
-        local png
-        for target in out:gmatch("[^\r\n]+") do
-          target = vim.trim(target)
-          if target == "image/png" then png = target break end
+      if vim.v.shell_error ~= 0 then
+        local detail = vim.trim(out):match("^([^\r\n]+)") or ("exit code " .. vim.v.shell_error)
+        if #detail > 120 then detail = detail:sub(1, 117) .. "..." end
+        reasons[#reasons + 1] = name .. ": " .. b.binary .. " failed: " .. detail
+      else
+        -- Prefer image/png, otherwise the first image/* target
+        local png, any
+        for line in out:gmatch("[^\r\n]+") do
+          local target = vim.trim(line)
+          if target == "image/png" and not png then png = target end
+          if not any and target:match("^image/") then any = target end
         end
-        if png then return png, name end
-        for target in out:gmatch("[^\r\n]+") do
-          target = vim.trim(target)
-          if target:match("^image/") then return target, name end
+        if png or any then
+          return png or any, name
         end
+        reasons[#reasons + 1] = name .. ": clipboard has no image target"
       end
     end
   end
-  return nil
+  return nil, nil, table.concat(reasons, "; ")
 end
 
 --- Build a smart default image path relative to the current page's directory.
--- Layout: <page-dir>/<page-basename>/image-<YYYYMMDD-HHMMSS>.png
--- i.e. a per-page subfolder named after the page, sitting next to the .md file.
-local function default_image_path(page_path)
+-- Layout: <page-dir>/<page-basename>/image-<YYYYMMDD-HHMMSS>.<ext>
+-- i.e. a per-page subfolder named after the page, sitting next to the .md
+-- file. The extension matches the clipboard MIME target (png by default).
+function M.default_image_path(page_path, target)
   local page_dir = vim.fn.fnamemodify(page_path, ":h")
   local page_basename = vim.fn.fnamemodify(page_path, ":t:r")
   local stamp = os.date("%Y%m%d-%H%M%S")
-  return page_dir .. "/" .. page_basename .. "/image-" .. stamp .. ".png"
+  return page_dir .. "/" .. page_basename .. "/image-" .. stamp .. "." .. M.image_extension(target)
 end
 
 --- Paste the image currently on the clipboard into the notes vault.
@@ -60,14 +121,14 @@ function M.paste(config)
     return
   end
 
-  local target, backend = detect_clipboard_image()
+  local target, backend, reason = M.detect_clipboard_image(config)
   if not target then
-    vim.notify("No image found on clipboard (copied an image first?)", vim.log.levels.WARN)
+    vim.notify("No image found on clipboard: " .. reason, vim.log.levels.WARN)
     return
   end
 
   local page_path = vim.fn.expand("%:p")
-  local suggested = default_image_path(page_path)
+  local suggested = M.default_image_path(page_path, target)
 
   -- Prompt the user, defaulting to the smart name (relative to the page dir is
   -- shown as a vault-relative-ish path for readability, but we resolve it next).
@@ -87,21 +148,15 @@ function M.paste(config)
 
     -- Force a sensible extension if missing
     if not dest:match("%.%w+$") then
-      dest = dest .. ".png"
+      dest = dest .. "." .. M.image_extension(target)
     end
 
     -- Create the per-page subfolder on first import
     local dir = vim.fn.fnamemodify(dest, ":h")
     vim.fn.mkdir(dir, "p")
 
-    -- Dump the clipboard image to disk
-    local read_cmd
-    if backend == "wl" then
-      read_cmd = string.format("wl-paste -t %s > %s", vim.fn.shellescape(target), vim.fn.shellescape(dest))
-    else
-      read_cmd = string.format("xclip -selection clipboard -o -t %s > %s", vim.fn.shellescape(target), vim.fn.shellescape(dest))
-    end
-    vim.fn.system(read_cmd)
+    -- Dump the clipboard image to disk with the backend that was detected
+    vim.fn.system(backends[backend].dump(target, dest))
     if vim.v.shell_error ~= 0 then
       vim.notify("Failed to read image from clipboard", vim.log.levels.ERROR)
       return
